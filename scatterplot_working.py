@@ -70,7 +70,7 @@ def graph_piecewise():
         piecewise(day_delims[i], day_delims[i+1], endval, gradient_vals[i])
 
 grad = DictReader("gradient_changes.csv")
-day_delims = np.array(grad['alt_day'])
+day_delims = np.array([datetime.datetime.strptime(d, "%Y-%m-%d").date() for d in grad['alt_day']])
 gradient_vals = np.array(grad['gradient_val'])
 #day_array = np.array([datetime.datetime.strptime(d, "%Y-%m-%d").date() for d in ret['day']])
 date_today = datetime.date.today()
@@ -81,15 +81,22 @@ np.append(day_delims, [date_today])
 endval = 0
 def piecewise(left_bound, right_bound, start, gradient):
     global endval
-    x = np.array([left_bound + datetime.timedelta(hours=i) for i in xrange(24)])
+    day_diff = (right_bound - left_bound).days
+    x = np.array([left_bound + datetime.timedelta(days=i) for i in xrange(day_diff + 1)])
     #x = np.arange(bound_min(period_inv2_array, uncert_period_inv2_array), bound_max(period_inv2_array, uncert_period_inv2_array), 0.005)
-    plt.plot(x, np.add(np.multiply(gradient, np.subtract(x, left_bound)), start), 'b-', label="$f(x) = {start} + {gradient}(x-{left_bound}), {left_bound} \leq x \leq {right_bound}$".format(start=start,gradient=gradient,left_bound=left_bound,right_bound=right_bound))
-    endval = np.add(np.multiply(gradient, np.subtract(right_bound, left_bound)), start)
+    #plt.plot(x, np.add(np.multiply(gradient, np.subtract(x, left_bound)), start), 'b-', label="$f(x) = {start} + {gradient}(x-{left_bound}), {left_bound} \leq x \leq {right_bound}$".format(start=start,gradient=gradient,left_bound=left_bound,right_bound=right_bound))
+    #plt.plot(x, np.array([50 for i in x]))
+    plt.plot(x, np.array([start + float(gradient) * float((d - left_bound).days) for d in x]))
+    #endval = np.add(np.multiply(gradient, np.subtract(right_bound, left_bound)), start)
+    endval = float(gradient) * float(day_diff)
+    #endval = np.multiply(gradient, day_diff)
+    #print "EV: " + str(float(gradient) * float(day_diff))
+    print "EV: " + str(endval)
 
 graph_piecewise()
 
 pl.xlabel(r'Day')
-pl.ylabel('Number of push-ups')
+pl.ylabel('Number of push-ups (cumulative)')
 pl.title(r"Push-ups vs days")
 pl.legend(loc='lower right', prop={'size':10})
 turn_on_grid_lines()
