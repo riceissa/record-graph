@@ -33,25 +33,25 @@ def turn_on_grid_lines():
     ax2.xaxis.grid(color='gray', linestyle='dashed')
     ax2.set_axisbelow(True)
 
+data = {}
+
 day = []
 push_ups = []
 
 def DictReader(fname):
     with open(fname, 'rt') as f:
-        # read in csv file
-        reader = csv.DictReader(f, delimiter=" ", skipinitialspace=True)
-        # csv.DictReader by default uses values in the first row of the
-        # data file as the field names
-        #     the `skipinitialspace` is so that extra whitespace is
-        # ignored (like in gnuplot)
+        # Read in csv file
+        reader = csv.reader(f, delimiter=" ", skipinitialspace=True)
+        # The `skipinitialspace` is so that extra whitespace is ignored
+        # (like in gnuplot).  For what follows, see
+        # http://stackoverflow.com/a/7958192/3422337 and
+        # http://riceissa.github.io/math/python_zip.html
+        keys = next(reader)
+        data = [row for row in reader]
+        columns = map(list, zip(*data))
+        return dict(zip(keys,columns))
 
-        for line in reader:
-            day.append(str(line['day']))
-            push_ups.append(float(line['push_ups']))
-        #print(type(reader))
-        #reader.items()
-
-    return(day, push_ups)
+DictReader("push_up_data.csv")
 
 ret = DictReader("push_up_data.csv")
 
@@ -60,6 +60,7 @@ day, push_ups = range(2)
 
 day_array = np.array([datetime.datetime.strptime(d, "%Y-%m-%d").date() for d in ret[day]])
 push_ups_array = np.array(ret[push_ups])
+push_ups_array = np.cumsum(push_ups_array)
 print(day_array)
 print(push_ups_array)
 ########## BEGIN PLOT
@@ -78,8 +79,8 @@ def graph_piecewise():
     for i in range(len(day_delims)-1):
         piecewise(day_delims[i], day_delims[i+1], endval, gradient_vals[i])
 
-day_delims = np.array([0, 4, 8, 12, 20])
-gradient_vals = np.array([0.5, 3, 5, 1])
+#day_delims = np.array([0, 4, 8, 12, 20])
+#gradient_vals = np.array([0.5, 3, 5, 1])
 
 endval = 0
 def piecewise(left_bound, right_bound, start, gradient):
