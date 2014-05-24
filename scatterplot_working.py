@@ -69,17 +69,24 @@ def graph_piecewise():
     for i in range(len(day_delims)-1):
         piecewise(day_delims[i], day_delims[i+1], endval, gradient_vals[i])
 
-#day_delims = np.array([0, 4, 8, 12, 20])
-#gradient_vals = np.array([0.5, 3, 5, 1])
+grad = DictReader("gradient_changes.csv")
+day_delims = np.array(grad['alt_day'])
+gradient_vals = np.array(grad['gradient_val'])
+#day_array = np.array([datetime.datetime.strptime(d, "%Y-%m-%d").date() for d in ret['day']])
+date_today = datetime.date.today()
+print day_delims
+print date_today
+np.append(day_delims, [date_today])
 
 endval = 0
 def piecewise(left_bound, right_bound, start, gradient):
     global endval
-    x = np.arange(left_bound, right_bound, 0.005)
+    x = np.array([left_bound + datetime.timedelta(hours=i) for i in xrange(24)])
     #x = np.arange(bound_min(period_inv2_array, uncert_period_inv2_array), bound_max(period_inv2_array, uncert_period_inv2_array), 0.005)
     plt.plot(x, np.add(np.multiply(gradient, np.subtract(x, left_bound)), start), 'b-', label="$f(x) = {start} + {gradient}(x-{left_bound}), {left_bound} \leq x \leq {right_bound}$".format(start=start,gradient=gradient,left_bound=left_bound,right_bound=right_bound))
     endval = np.add(np.multiply(gradient, np.subtract(right_bound, left_bound)), start)
 
+graph_piecewise()
 
 pl.xlabel(r'Day')
 pl.ylabel('Number of push-ups')
