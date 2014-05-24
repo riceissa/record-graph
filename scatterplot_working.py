@@ -33,11 +33,6 @@ def turn_on_grid_lines():
     ax2.xaxis.grid(color='gray', linestyle='dashed')
     ax2.set_axisbelow(True)
 
-data = {}
-
-day = []
-push_ups = []
-
 def DictReader(fname):
     with open(fname, 'rt') as f:
         # Read in csv file
@@ -54,9 +49,6 @@ def DictReader(fname):
 DictReader("push_up_data.csv")
 
 ret = DictReader("push_up_data.csv")
-
-day, push_ups = range(2)
-# Assign numbers to each variable so that we can use them for indexing later.
 
 day_array = np.array([datetime.datetime.strptime(d, "%Y-%m-%d").date() for d in ret[day]])
 push_ups_array = np.array(ret[push_ups])
