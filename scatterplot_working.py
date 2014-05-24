@@ -32,18 +32,6 @@ def turn_on_grid_lines():
     ax2 = plt.subplot(111)
     ax2.xaxis.grid(color='gray', linestyle='dashed')
     ax2.set_axisbelow(True)
-def bound_max(array, uncert_array):
-    maximum = max(array)
-    l = list(i for i in range(len(array)) if array[i]==maximum)
-    index = max(l)
-    max_with_uncert = array[index] + uncert_array[index]
-    return max_with_uncert
-def bound_min(array, uncert_array):
-    minimum = min(array)
-    l = list(i for i in range(len(array)) if array[i]==minimum)
-    index = min(l)
-    min_with_uncert = array[index] - uncert_array[index]
-    return min_with_uncert
 
 day = []
 push_ups = []
