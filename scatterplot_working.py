@@ -46,12 +46,10 @@ def DictReader(fname):
         columns = map(list, zip(*data))
         return dict(zip(keys,columns))
 
-DictReader("push_up_data.csv")
-
 ret = DictReader("push_up_data.csv")
 
-day_array = np.array([datetime.datetime.strptime(d, "%Y-%m-%d").date() for d in ret[day]])
-push_ups_array = np.array(ret[push_ups])
+day_array = np.array([datetime.datetime.strptime(d, "%Y-%m-%d").date() for d in ret['day']])
+push_ups_array = np.array([float(i) for i in ret['push_ups']])
 push_ups_array = np.cumsum(push_ups_array)
 print(day_array)
 print(push_ups_array)
