@@ -83,7 +83,7 @@ def piecewise(left_bound, right_bound, start, gradient):
     x = np.array([left_bound + datetime.timedelta(days=i) for i in xrange(day_diff + 1)])
     #x = np.arange(bound_min(period_inv2_array, uncert_period_inv2_array), bound_max(period_inv2_array, uncert_period_inv2_array), 0.005)
     #plt.plot(x, np.add(np.multiply(gradient, np.subtract(x, left_bound)), start), 'b-', label="$f(x) = {start} + {gradient}(x-{left_bound}), {left_bound} \leq x \leq {right_bound}$".format(start=start,gradient=gradient,left_bound=left_bound,right_bound=right_bound))
-    plt.plot(x, np.array([start + float(gradient) * float((d - left_bound).days) for d in x]))
+    plt.plot(x, np.array([start + float(gradient) * float((d - left_bound).days) for d in x]), 'b-')
     #endval = np.add(np.multiply(gradient, np.subtract(right_bound, left_bound)), start)
     endval = (float(gradient) * float(day_diff)) + float(start)
     #endval = np.multiply(gradient, day_diff)
