@@ -84,7 +84,9 @@ day_delims = np.array([datetime.datetime.strptime(d, "%Y-%m-%d").date() for d in
 gradient_vals = np.array(grad['gradient_val'])
 #day_array = np.array([datetime.datetime.strptime(d, "%Y-%m-%d").date() for d in ret['day']])
 date_today = datetime.date.today()
-day_delims = np.append(day_delims, [date_today])
+graph_to = date_today + datetime.timedelta(8)
+#graph_to = date_today + np.timedelta64(8*86400000000) # microsecond factor; 8 days; newer versions of numpy will do this automatically...
+day_delims = np.append(day_delims, [graph_to])
 
 endval = 0
 def piecewise(left_bound, right_bound, start, gradient):
@@ -96,6 +98,7 @@ def piecewise(left_bound, right_bound, start, gradient):
     endval = (float(gradient) * float(day_diff)) + float(start)
     print "EV: " + str(endval)
 
+plt.axvline(date_today + datetime.timedelta(7), color='m')
 plt.xticks(rotation=90)
 graph_piecewise()
 
