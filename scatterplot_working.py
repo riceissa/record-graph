@@ -52,14 +52,16 @@ day_array = np.array([datetime.datetime.strptime(d, "%Y-%m-%d").date() for d in 
 push_ups_array = np.array([float(i) for i in ret['push_ups']])
 push_ups_array = np.cumsum(push_ups_array)
 print(day_array)
+print("first day: " + str(min(day_array)), "last day: " + str(max(day_array)))
+print max(day_array) - min(day_array)
 print(push_ups_array)
 ########## BEGIN PLOT
 myDays = DayLocator(interval=5)
 myMonths = MonthLocator()
-myFmt = DateFormatter('%d')
+myFmt = DateFormatter('%b %d')
 fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.xaxis.set_major_locator(myDays)
+ax.xaxis.set_major_locator(myDays) # change this to myMonths to show monthly ticks instead.
 ax.xaxis.set_major_formatter(myFmt)
 #ax.autoscale_view()
 plt.scatter(day_array, push_ups_array, label="push-up dots", c='r', marker='p')
@@ -81,13 +83,9 @@ def piecewise(left_bound, right_bound, start, gradient):
     global endval
     day_diff = (right_bound - left_bound).days
     x = np.array([left_bound + datetime.timedelta(days=i) for i in xrange(day_diff + 1)])
-    #x = np.arange(bound_min(period_inv2_array, uncert_period_inv2_array), bound_max(period_inv2_array, uncert_period_inv2_array), 0.005)
     #plt.plot(x, np.add(np.multiply(gradient, np.subtract(x, left_bound)), start), 'b-', label="$f(x) = {start} + {gradient}(x-{left_bound}), {left_bound} \leq x \leq {right_bound}$".format(start=start,gradient=gradient,left_bound=left_bound,right_bound=right_bound))
     plt.plot(x, np.array([start + float(gradient) * float((d - left_bound).days) for d in x]), 'b-')
-    #endval = np.add(np.multiply(gradient, np.subtract(right_bound, left_bound)), start)
     endval = (float(gradient) * float(day_diff)) + float(start)
-    #endval = np.multiply(gradient, day_diff)
-    #print "EV: " + str(float(gradient) * float(day_diff))
     print "EV: " + str(endval)
 
 graph_piecewise()
