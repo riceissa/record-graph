@@ -1,6 +1,6 @@
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from matplotlib.dates import DayLocator, MonthLocator, DateFormatter
+from matplotlib.dates import DayLocator, MonthLocator, DateFormatter, AutoDateLocator
 import datetime
 import numpy as np
 import pylab as pl
@@ -11,6 +11,8 @@ from scipy.optimize import curve_fit
 ##### Begin font settings
 #mpl.use("pgf")
 pgf_with_rc_fonts = {
+    #"figure.autolayout": True, # This one should work for newer versions
+    "figure.subplot.bottom": 0.20,
     ##'family': 'serif',
     ##'serif': ['cmr10'],
     "font.family": "serif",
@@ -35,6 +37,9 @@ def turn_on_grid_lines():
 
 def DictReader(fname):
     with open(fname, 'rt') as f:
+        #for line in f:
+            #if line.startswith("#"):
+                #f.remove(line)
         # Read in csv file
         reader = csv.reader(f, delimiter=" ", skipinitialspace=True)
         # The `skipinitialspace` is so that extra whitespace is ignored
@@ -55,13 +60,16 @@ print(day_array)
 print("first day: " + str(min(day_array)), "last day: " + str(max(day_array)))
 print max(day_array) - min(day_array)
 print(push_ups_array)
+
+
 ########## BEGIN PLOT
 myDays = DayLocator(interval=5)
 myMonths = MonthLocator()
-myFmt = DateFormatter('%b %d')
+myAuto = AutoDateLocator()
+myFmt = DateFormatter('%-d %b %Y')
 fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.xaxis.set_major_locator(myDays) # change this to myMonths to show monthly ticks instead.
+ax.xaxis.set_major_locator(myAuto) # change this to myMonths to show monthly ticks instead.
 ax.xaxis.set_major_formatter(myFmt)
 #ax.autoscale_view()
 plt.scatter(day_array, push_ups_array, label="push-up dots", c='r', marker='p')
@@ -88,6 +96,7 @@ def piecewise(left_bound, right_bound, start, gradient):
     endval = (float(gradient) * float(day_diff)) + float(start)
     print "EV: " + str(endval)
 
+plt.xticks(rotation=90)
 graph_piecewise()
 
 pl.xlabel(r'Day')
